@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "type": "string"
+        },
+        "keyVaultSku": {
+            "type": "string"
+        },
+        "keyVaultAccessPolicies": {
+            "type": "array"
+        },
+        "keyVaultTenant": {
+            "type": "string"
+        },
+        "keyVaultEnabledForDeployment": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "keyVaultEnabledForTemplateDeployment": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "keyVaultEnabledForDiskEncryption": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "keyVaultEnableRbacAuthorization": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "keyVaultEnableSoftDelete": {
+            "type": "bool",
+            "defaultValue": true
+        },
+        "keyVaultSoftDeleteRetentionInDays": {
+            "type": "int",
+            "defaultValue": 90
+        },
+        "keyVaultNetworkAcls": {
+            "type": "object"
+        },
+        "csName": {
+            "type": "string"
+        },
+        
+        "location": {
+            "type": "string"
+        },
+        "csSku": {
+            "type": "string"
+        },
+        "csIdentity": {
+            "type": "object"
+        },
+        "secretName1": {
+            "type": "string"
+        },
+        "secretName2": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "csResourceId": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', parameters('csName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('keyVaultName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "enabledForDeployment": "[parameters('keyVaultEnabledForDeployment')]",
+                "enabledForTemplateDeployment": "[parameters('keyVaultEnabledForTemplateDeployment')]",
+                "enabledForDiskEncryption": "[parameters('keyVaultEnabledForDiskEncryption')]",
+                "enableRbacAuthorization": "[parameters('keyVaultEnableRbacAuthorization')]",
+                "accessPolicies": "[parameters('keyVaultAccessPolicies')]",
+                "tenantId": "[parameters('keyVaultTenant')]",
+                "sku": {
+                    "name": "[parameters('keyVaultSku')]",
+                    "family": "A"
+                },
+                "enableSoftDelete": "[parameters('keyVaultEnableSoftDelete')]",
+                "softDeleteRetentionInDays": "[parameters('keyVaultSoftDeleteRetentionInDays')]",
+                "networkAcls": "[parameters('keyVaultNetworkAcls')]"
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "kind": "CognitiveServices",
+            "apiVersion": "2021-04-30",
+            "name": "[parameters('csName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('csSku')]"
+            },
+            "identity": "[parameters('csIdentity')]",
+            "properties": {
+                "customSubDomainName": "[toLower(parameters('csName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName1'))]",
+            "properties": {
+              "value": "[listKeys(variables('csResourceId'),'2021-04-30').key1]"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName2'))]",
+            "properties": {
+              "value": "[listKeys(variables('csResourceId'),'2021-04-30').key2]"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ]
+        }
+    ]
+}

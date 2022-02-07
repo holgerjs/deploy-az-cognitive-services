@@ -1,0 +1,67 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyVaultName": {
+        "value": "GEN-KEYVAULT-NAME"
+      },
+      "keyVaultSku": {
+        "value": "Standard"
+      },
+      "keyVaultAccessPolicies":{
+          "value": [
+            {
+              "objectId":"GEN-GUID",
+              "tenantId":"GEN-GUID",
+              "permissions": {
+                  "secrets": [
+                      "Get",
+                      "List",
+                      "Set",
+                      "Delete",
+                      "Recover",
+                      "Backup",
+                      "Restore"
+                  ]
+              },
+              "applicationId": ""
+            }
+        ] 
+      },
+      "keyVaultTenant": {
+          "value": "GEN-GUID"
+      },
+      "keyVaultNetworkAcls": {
+        "value": {
+            "defaultAction": "deny",
+            "bypass": "AzureServices",
+            "ipRules": [
+                {
+                    "value": "GEN-UNIQUE"
+                }
+            ],
+            "virtualNetworkRules": []
+        }
+      },
+      "csName": {
+          "value": "GEN-UNIQUE"
+      },
+      "csSku": {
+          "value": "S0"
+      },
+      "location": {
+          "value": "WestEurope"
+      },
+      "csIdentity": {
+          "value": {
+            "type": "None"
+          }
+      },
+      "secretName1": {
+          "value": "GEN-KEYVAULT-PASSWORD-SECRET-NAME"
+      },
+      "secretName2": {
+          "value": "GEN-KEYVAULT-PASSWORD-SECRET-NAME"
+      }
+    }
+  }
