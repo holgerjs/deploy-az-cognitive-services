@@ -1,8 +1,4 @@
-# Templates and Code Snippets for Azure AI Service Deployments
-
-This repository contains ARM templates and/or PowerShell code for deploying Azure AI Services in a test environment and play around with the configuration.
-
-## Cognitive Services
+# Cognitive Services
 
 The ARM template can be used to deploy an Azure KeyVault and a Cognitive Services Account. As recommended by Microsoft, the Access Keys are stored in the Key Vault to remove the need to add them directly into the application code.
 
