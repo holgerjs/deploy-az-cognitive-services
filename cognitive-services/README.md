@@ -92,3 +92,21 @@ Using PowerShell and the REST API endpoint, we can test whether this works.
 
 We have now proven that we can execute the request without storing the access key within code.
 Please note, that in a real-world scenario we would use a service principal or managed identity, provide it access to they keys in the key vault (`Get` and `List` permissions against Secrets should be sufficient) and use the SPN to query the REST API.
+
+## Rotate the keys
+
+When rotating the keys, we need to make sure that the app is using the key that is not being rotated so that operations are not affected.
+
+1. Create first key and store it in the Key Vault
+    
+    ```azurepowershell
+    $newKey1 = (New-AzCognitiveServicesAccountKey -KeyName Key1 -ResourceGroupName $resourceGroupName -Name $cognitiveServicesName).Key1 | ConvertTo-SecureString -AsPlainText -Force
+    Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyName1 -SecretValue $newKey1
+    ```
+
+2. Change application to use the first key and rotate the second key
+
+    ```azurepowershell
+    $newKey2 = (New-AzCognitiveServicesAccountKey -KeyName Key2 -ResourceGroupName $resourceGroupName -Name $cognitiveServicesName).Key2 | ConvertTo-SecureString -AsPlainText -Force
+    Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyName2 -SecretValue $newKey2
+    ```
