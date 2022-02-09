@@ -7,7 +7,7 @@ The aim is to deploy the services with security settings in place, such as restr
 ---
 **Please Note**
 
-None of the templates and samples in this repository should be used in production environments. The intention is to provide a starting point for testing deployments.
+None of the templates and samples in this repository should be used in production environments. The intention is to learn stuff and provide a starting point for testing deployments.
 
 ---
 
