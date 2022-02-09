@@ -113,7 +113,8 @@ When rotating the keys, we need to make sure that the app is using the key that 
     Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $keyName1 -SecretValue $newKey1
     ```
 
-2. Change application to use the first key and rotate the second key
+2. Change application to use the first key 
+3. and rotate the second key
 
     ```azurepowershell
     $newKey2 = (New-AzCognitiveServicesAccountKey -KeyName Key2 -ResourceGroupName $resourceGroupName -Name $cognitiveServicesName).Key2 | ConvertTo-SecureString -AsPlainText -Force
